@@ -54,7 +54,10 @@ const deleteLists = async (req, res) => {
       where: { id: Number(id) }
     });
     if (deleted) {
-      return res.status(200).json({"msg": "List deleted"});
+     
+
+      return res.status(204).json({"msg": "List deleted"});
+
     }
     throw new Error("Note not found");
   } catch (error) {

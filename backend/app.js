@@ -1,11 +1,14 @@
 const express = require("express");
 const app = express();
-const jwt = require("jsonwebtoken");
+
 const Cors = require("cors");
 const bodyParser = require('body-parser');
-const controllersUser = require('./controllers/controllerUser');
-const controllerTask = require('./controllers/controllerTask');
 const listRouter = require('./routes/lists');
+const taskRouter = require('./routes/tasks')
+const userRouter = require('./routes/users')
+const loginRouter = require('./routes/login')
+const createUserRoute = require('./routes/createUser')
+const loginMasterRoute = require('./routes/master')
 
 
 const PORT = process.env.PORT || 3001;
@@ -66,11 +69,22 @@ app.get("/sign-in", controllersUser.getAllUsers);
 
 app.delete("/sign-in/:id", controllersUser.deleteUser);
 
-app.use('/lists', listRouter);
 
-app.post("/task", controllerTask.createTask);
-  
-app.get("/task", controllerList.getAllLists);
+const authenticateUserMaster = require('./auth/authMaster').authenticateUserMaster
+const authenticateUsers = require('./auth/authUser').authenticateUsers
+
+app.use("/", loginMasterRoute)
+
+app.use("/sign-up", createUserRoute);
+
+app.use('/login', loginRouter);
+
+app.use('/lists', authenticateUsers, listRouter);
+
+app.use('/tasks', authenticateUsers, taskRouter)
+
+app.use('/sign-in', authenticateUserMaster , userRouter);
+
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
