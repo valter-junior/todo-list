@@ -1,25 +1,15 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router';
+import { Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import auth from './auth';
 
 
-export const ProtectedRoute = ({component: Component, ...rest}) => {
-    return (
-        <Route {...rest} render={(props) => {
-            if(auth.isAuthenticated()) {
-                return <Component {...props}/>
-            } else {
-                return <Redirect to={{
-                          pathname: "/",
-                          state: {
-                              from: props.location
-                       }}
-                }/>
+export const ProtectedRoute = () => {
+    let location = useLocation();
 
-              }
-                
-            }
-        }/>
-    )
+    if(!auth.isAuthenticated()){
+        return <Navigate to="/" state={{from: location}} />;
+
+    }
+    return <Outlet/>;
 }
 

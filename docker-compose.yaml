@@ -1,0 +1,30 @@
+version: '3.5'
+
+services:
+  db:
+    container_name: todolist-db
+    image: postgres:13.2
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+  
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@user.com
+      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+        - pgadmin:/root/.pgadmin
+    ports:
+      - "8080:80"
+    
+volumes:
+  postgres:
+  pgadmin:
